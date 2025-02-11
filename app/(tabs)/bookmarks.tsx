@@ -1,3 +1,3 @@
-export default function TabTwoScreen() {
+export default function Bookmarks() {
   return <></>;
 }
