@@ -8,18 +8,19 @@ import {
   Phone,
 } from "@tamagui/lucide-icons";
 import { createElement, useMemo } from "react";
-import { Card, Separator, SizableText, View, XStack, YStack } from "tamagui";
+import {
+  Card,
+  CardProps,
+  Separator,
+  SizableText,
+  View,
+  XStack,
+  YStack,
+} from "tamagui";
 import { useSnapshot } from "valtio";
 import { globalStore, toggleBookmark } from "../store/global";
+import { getKey } from "../utils";
 import { Skeleton } from "./skeleton";
-
-const getKey = (data: any, key: string) => {
-  if (key.includes(".")) {
-    const keys = key.split(".");
-    return getKey(data[keys[0]], keys.slice(1).join("."));
-  }
-  return data?.[key];
-};
 
 const footerItems: {
   icon: React.NamedExoticComponent<IconProps>;
@@ -36,10 +37,6 @@ const footerItems: {
     },
   ],
   [
-    // {
-    //   icon: Clock,
-    //   dataKey: "job_hours",
-    // },
     {
       icon: Locate,
       dataKey: "primary_details.Place",
@@ -51,7 +48,10 @@ const footerItems: {
   ],
 ];
 
-export const JobCard = ({ data }: { data: JobPosting }) => {
+export const JobCard = ({
+  data,
+  ...rest
+}: { data: JobPosting } & CardProps) => {
   const globalSnap = useSnapshot(globalStore);
   const isBookmarked = useMemo(
     () => !!globalSnap.bookmarks.find((each) => each.id === data.id),
@@ -59,7 +59,7 @@ export const JobCard = ({ data }: { data: JobPosting }) => {
   );
 
   return (
-    <Card padding={"$4"} marginBottom={"$4"}>
+    <Card padding={"$4"} marginBottom={"$4"} {...rest}>
       <XStack alignItems={"center"}>
         <YStack flex={1}>
           <SizableText size={"$6"} fontWeight={"bold"}>

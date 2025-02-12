@@ -1,21 +1,17 @@
 import { fetchJobs } from "@/src/api";
 import { JobCard, JobCardSkeleton } from "@/src/components/job-card";
+import { JobDetail } from "@/src/components/job-detail";
 import { Page } from "@/src/components/page";
-import { globalStore } from "@/src/store/global";
+import { BottomSheetFC, useBottomSheet } from "@/src/hooks/useBottomSheet";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { SizableText } from "tamagui";
-import { useSnapshot } from "valtio";
-
-const renderItem: ListRenderItem<JobPosting> = ({ item, index }) => {
-  return <JobCard data={item} key={index} />;
-};
 
 const SKELETON_HEIGHT = 211;
 
 export default function HomeScreen() {
-  const globalSnap = useSnapshot(globalStore);
+  const { bottomSheetRef, BottomSheet } = useBottomSheet();
   const {
     data,
     fetchNextPage,
@@ -49,9 +45,31 @@ export default function HomeScreen() {
     [data?.pages]
   );
 
+  const renderItem: ListRenderItem<JobPosting> = useCallback(
+    ({ item, index }) => {
+      return (
+        <JobCard
+          data={item}
+          key={index}
+          onPress={() => {
+            bottomSheetRef.current?.present(item);
+          }}
+        />
+      );
+    },
+    []
+  );
+
   return (
     <Page>
       <Page.Header title="Jobs" />
+      <BottomSheet>
+        {({ data }: BottomSheetFC<JobPosting>) => (
+          <BottomSheet.View>
+            {data && <JobDetail data={data} />}
+          </BottomSheet.View>
+        )}
+      </BottomSheet>
       <FlashList
         data={transformedData}
         renderItem={renderItem}

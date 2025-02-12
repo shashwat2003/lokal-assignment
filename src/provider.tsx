@@ -1,3 +1,4 @@
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import {
   DarkTheme,
   DefaultTheme,
@@ -17,16 +18,18 @@ export const RootProvider = ({ children }: React.PropsWithChildren) => {
   const globalSnap = useSnapshot(globalStore);
 
   return (
-    <TamaguiProvider config={config}>
-      <Theme name={globalSnap.theme}>
-        <ThemeProvider
-          value={globalSnap.theme === "light" ? DefaultTheme : DarkTheme}
-        >
-          <QueryClientProvider client={queryClient}>
-            <GestureHandlerRootView>{children}</GestureHandlerRootView>
-          </QueryClientProvider>
-        </ThemeProvider>
-      </Theme>
-    </TamaguiProvider>
+    <GestureHandlerRootView>
+      <TamaguiProvider config={config}>
+        <Theme name={globalSnap.theme}>
+          <ThemeProvider
+            value={globalSnap.theme === "light" ? DefaultTheme : DarkTheme}
+          >
+            <QueryClientProvider client={queryClient}>
+              <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
+            </QueryClientProvider>
+          </ThemeProvider>
+        </Theme>
+      </TamaguiProvider>
+    </GestureHandlerRootView>
   );
 };
