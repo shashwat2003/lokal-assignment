@@ -1,10 +1,12 @@
 import { fetchJobs } from "@/src/api";
 import { JobCard, JobCardSkeleton } from "@/src/components/JobCard";
+import { Page } from "@/src/components/Page";
+import { globalStore } from "@/src/store/global";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { SizableText, View } from "tamagui";
+import { SizableText } from "tamagui";
+import { useSnapshot } from "valtio";
 
 const renderItem: ListRenderItem<JobPosting> = ({ item, index }) => {
   return <JobCard data={item} key={index} />;
@@ -13,7 +15,7 @@ const renderItem: ListRenderItem<JobPosting> = ({ item, index }) => {
 const SKELETON_HEIGHT = 211;
 
 export default function HomeScreen() {
-  const { top } = useSafeAreaInsets();
+  const globalSnap = useSnapshot(globalStore);
   const {
     data,
     fetchNextPage,
@@ -25,19 +27,20 @@ export default function HomeScreen() {
     queryKey: ["jobs"],
     queryFn: fetchJobs,
     initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages, lastPageParam) => {
+    getNextPageParam: (lastPage, _, lastPageParam) => {
       if (lastPage.length === 0) {
         return undefined;
       }
       return lastPageParam + 1;
     },
-    getPreviousPageParam: (firstPage, allPages, firstPageParam) => {
+    getPreviousPageParam: (_, __, firstPageParam) => {
       if (firstPageParam <= 1) {
         return undefined;
       }
       return firstPageParam - 1;
     },
   });
+
   const transformedData = useMemo(
     () =>
       data?.pages
@@ -47,18 +50,12 @@ export default function HomeScreen() {
   );
 
   return (
-    <View
-      flex={1}
-      backgroundColor={"$background"}
-      paddingTop={top}
-      paddingHorizontal={"$3"}
-    >
-      <SizableText size={"$10"} fontWeight={"bold"}>
-        Jobs
-      </SizableText>
+    <Page>
+      <Page.Header title="Jobs" />
       <FlashList
         data={transformedData}
         renderItem={renderItem}
+        refreshing={false}
         onEndReached={() => {
           fetchNextPage();
         }}
@@ -80,7 +77,7 @@ export default function HomeScreen() {
               {isFetchingNextPage && (
                 <JobCardSkeleton height={SKELETON_HEIGHT} count={1} />
               )}
-              {!hasNextPage && (
+              {!hasNextPage && !isLoading && (
                 <SizableText textAlign="center" color={"$color04"}>
                   No more jobs :-(
                 </SizableText>
@@ -91,6 +88,6 @@ export default function HomeScreen() {
         onEndReachedThreshold={0.1}
         estimatedItemSize={SKELETON_HEIGHT}
       />
-    </View>
+    </Page>
   );
 }
