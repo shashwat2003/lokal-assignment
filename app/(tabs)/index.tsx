@@ -1,6 +1,7 @@
 import { fetchJobs } from "@/src/api";
 import { JobCard, JobCardSkeleton } from "@/src/components/job-card";
 import { JobDetail } from "@/src/components/job-detail";
+import { JobEmpty } from "@/src/components/job-empty";
 import { Page } from "@/src/components/page";
 import { BottomSheetFC, useBottomSheet } from "@/src/hooks/useBottomSheet";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
@@ -28,12 +29,6 @@ export default function HomeScreen() {
         return undefined;
       }
       return lastPageParam + 1;
-    },
-    getPreviousPageParam: (_, __, firstPageParam) => {
-      if (firstPageParam <= 1) {
-        return undefined;
-      }
-      return firstPageParam - 1;
     },
   });
 
@@ -86,6 +81,7 @@ export default function HomeScreen() {
               {isLoading && (
                 <JobCardSkeleton height={SKELETON_HEIGHT} count={2} />
               )}
+              {!isLoading && transformedData.length === 0 && <JobEmpty />}
             </>
           );
         }}
@@ -95,7 +91,7 @@ export default function HomeScreen() {
               {isFetchingNextPage && (
                 <JobCardSkeleton height={SKELETON_HEIGHT} count={1} />
               )}
-              {!hasNextPage && !isLoading && (
+              {!hasNextPage && !isLoading && transformedData.length !== 0 && (
                 <SizableText textAlign="center" color={"$color04"}>
                   No more jobs :-(
                 </SizableText>

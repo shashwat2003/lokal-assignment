@@ -34,7 +34,13 @@ const PageHeader = XStack.styleable<PageHeaderProps>((props, ref) => {
   const globalSnap = useSnapshot(globalStore);
 
   return (
-    <XStack ref={ref} alignItems="center" paddingBottom={"$3"} {...rest}>
+    <XStack
+      ref={ref}
+      alignItems="center"
+      paddingBottom={"$3"}
+      theme={"blue"}
+      {...rest}
+    >
       <SizableText flex={1} size={"$10"} fontWeight={"bold"}>
         {title}
       </SizableText>

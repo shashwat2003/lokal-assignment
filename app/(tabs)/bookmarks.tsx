@@ -1,5 +1,6 @@
 import { JobCard } from "@/src/components/job-card";
 import { JobDetail } from "@/src/components/job-detail";
+import { JobEmpty } from "@/src/components/job-empty";
 import { Page } from "@/src/components/page";
 import { BottomSheetFC, useBottomSheet } from "@/src/hooks/useBottomSheet";
 import { globalStore } from "@/src/store/global";
@@ -39,6 +40,15 @@ export default function Bookmarks() {
         data={globalSnap.bookmarks as JobPosting[]}
         renderItem={renderItem}
         refreshing={false}
+        ListHeaderComponent={() => {
+          return (
+            <>
+              {globalSnap.bookmarks.length === 0 && (
+                <JobEmpty subTitle="NO BOOKMARKS YET!" />
+              )}
+            </>
+          );
+        }}
         estimatedItemSize={211}
       />
     </Page>
