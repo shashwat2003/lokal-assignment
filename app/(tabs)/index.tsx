@@ -1,6 +1,6 @@
 import { fetchJobs } from "@/src/api";
-import { JobCard, JobCardSkeleton } from "@/src/components/JobCard";
-import { Page } from "@/src/components/Page";
+import { JobCard, JobCardSkeleton } from "@/src/components/job-card";
+import { Page } from "@/src/components/page";
 import { globalStore } from "@/src/store/global";
 import { FlashList, ListRenderItem } from "@shopify/flash-list";
 import { useInfiniteQuery } from "@tanstack/react-query";

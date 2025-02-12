@@ -11,7 +11,7 @@ import { createElement, useMemo } from "react";
 import { Card, Separator, SizableText, View, XStack, YStack } from "tamagui";
 import { useSnapshot } from "valtio";
 import { globalStore, toggleBookmark } from "../store/global";
-import { Skeleton } from "./Skeleton";
+import { Skeleton } from "./skeleton";
 
 const getKey = (data: any, key: string) => {
   if (key.includes(".")) {
