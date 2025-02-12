@@ -1,3 +1,7 @@
+# Project Demo
+
+[![Watch the video](https://i.ytimg.com//vi/f7rqWpWPluI/maxresdefault.jpg)](https://youtu.be/f7rqWpWPluI)
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
